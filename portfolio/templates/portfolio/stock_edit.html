@@ -1,0 +1,13 @@
+{% extends 'portfolio/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+    <h1>Edit Stock</h1>
+       <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-primary">Update</button>
+    </form>
+</body>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <title>Eagle Financial Services</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eagle Financial Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+        body,html{
+            height: 100%;
+            margin: 0;
+            background: #7F7FD5;
+            background: -webkit-linear-gradient(to right, #ffffff, #ffffff);
+            background: linear-gradient(to right, #ffffff, #de9404);
+        }
+        #events_card{
+            padding-bottom: 40px;
+        }
+
+</style>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+    <a href="/" class="navbar-brand">Eagle Financial Services</a>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item lead"><a class=nav-link href="{% url 'portfolio:home' %}">Home</a></li>
+            <li class="nav-item lead"><a class=nav-link href="{% url 'portfolio:customer_list' %}">Customers</a></li>
+            <li class="nav-item lead"><a class=nav-link href="{% url 'portfolio:investment_list' %}">Investment</a></li>
+            <li class="nav-item lead"><a class=nav-link href="{% url 'portfolio:stock_list' %}">Stocks</a></li>
+
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+
+            <li><a class="nav-link lead" href="{% url 'logout' %}"><span class="fa fa-btn fa-sign-out"></span>Logout</a>
+            </li>
+            {% else %}
+            <li><a class="nav-link lead" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+    </div>
+</nav>
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            {% block content %}
+            <div class="links">
+                <!-- Example row of columns -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                            <img src="{% static " images/customers.jpg" %}" alt="customers"/>
+                            <div class="caption">
+                                <h2>Customer</h2>
+                                <p>We see our success in our customers success, it gives us an immense pleasure when
+                                    our
+                                    advises
+                                    turn out to be fruitful. </p>
+                                {% if user.is_authenticated %}
+                                <p><a class="btn btn-default" href="{% url 'portfolio:customer_list' %}"
+                                      role="button">View
+                                    details &raquo;</a></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                            <img src="{% static " images/nonstock.jpg" %}" alt="non-stock"/>
+                            <div class="caption">
+                                <h2>Non-Stock Investments</h2>
+                                <p>Our team also provides advice for Non-Stock investments.</p>
+                                <p><a class="btn btn-default" href="{% url 'portfolio:investment_list' %}"
+                                      role="button">View
+                                    details &raquo;</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="thumbnail">
+                            <img src="{% static " images/stocks.jpg" %}" alt="stocks"/>
+                            <div class="caption">
+                                <h2>Stock Portfolio</h2>
+                                <p>Our Stock portfolios vary across industries.</p>
+                                <p><a class="btn btn-default" href="{% url 'portfolio:stock_list' %}" role="button">View
+                                    details &raquo;</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+</div>
+
+</body>
+
+</html>
+

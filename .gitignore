@@ -1,0 +1,11 @@
+/myenv/
+.idea/
+*.pyc
+*~
+__pycache__
+myenv/lib
+db.sqlite3
+/static
+.DS_Store
+/lib/
+/.idea/.gitignore
