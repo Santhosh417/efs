@@ -127,6 +127,5 @@ LOGOUT_REDIRECT_URL='/home'
 STATIC_ROOT = os.path.join(BASE_DIR, 'portfolio/static')
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-AUTH_USER_MODEL = 'users.User'
 
 django_heroku.settings(locals())
