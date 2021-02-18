@@ -1,9 +1,9 @@
-/myenv/
+/venv/
 .idea/
 *.pyc
 *~
 __pycache__
-myenv/lib
+venv/lib
 db.sqlite3
 /static
 .DS_Store
