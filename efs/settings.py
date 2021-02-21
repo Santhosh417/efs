@@ -133,17 +133,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'portfolio/static')
 STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'unopython@gmail.com'
-# EMAIL_HOST_PASSWORD = 'python8210'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'acmeCMS8210@gmail.com'
-EMAIL_HOST_PASSWORD = 'testing@123'
+EMAIL_HOST_USER = 'unopython@gmail.com'
+EMAIL_HOST_PASSWORD = 'python8210'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
 
 django_heroku.settings(locals())
