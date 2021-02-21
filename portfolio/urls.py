@@ -1,12 +1,14 @@
 from django.conf.urls import url
 from . import views
 from django.urls import path
+from rest_framework.urlpatterns import format_suffix_patterns
 
 app_name = 'portfolio'
 urlpatterns = [
     path('customer_list', views.customer_list, name='customer_list'),
     path('customer/<int:pk>/edit/', views.customer_edit, name='customer_edit'),
     path('customer/<int:pk>/delete/', views.customer_delete, name='customer_delete'),
+    path('customer/create/', views.customer_new, name='customer_new'),
 
     path('', views.home, name='home'),
     path('home/', views.home, name='home'),
@@ -20,4 +22,11 @@ urlpatterns = [
     path('investment/create/', views.investment_new, name='investment_new'),
     path('investment/<int:pk>/edit/', views.investment_edit, name='investment_edit'),
     path('investment/<int:pk>/delete/', views.investment_delete, name='investment_delete'),
+
+    path('customer/<int:pk>/portfolio/', views.portfolio, name='portfolio'),
+    url('customers_json/', views.CustomerList.as_view()),
+
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
+
