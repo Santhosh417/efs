@@ -8,3 +8,4 @@ psycopg2==2.8.5
 gunicorn
 django-heroku
 requests
+WeasyPrint
