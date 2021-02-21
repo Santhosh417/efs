@@ -1,0 +1,143 @@
+{% load humanize %}
+{% load mathfilters %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Eagle Financial</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="row">
+            <h1 style="padding-left: 15Px">Customer Portfolio</h1>
+        </div>
+        <div class="row">
+            <h2 style="padding-left: 15Px">Overall Portfolio performance</h2>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Portfolio initial investment($)</th>
+                        <th>Portfolio initial investment($)</th>
+                        <th>Grand total results($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{ sum_of_initial_stock_value | add:sum_acquired_value.acquired_value__sum|intcomma }}</td>
+                    <td>{{ sum_current_stocks_value | add:sum_recent_value.recent_value__sum | intcomma }}</td>
+                    <td>{{ sum_current_stocks_value |add:sum_recent_value.recent_value__sum | sub:sum_of_initial_stock_value |add:sum_acquired_value.acquired_value__sum |intcomma }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <h2 style="padding-left: 15Px">Stocks Information</h2>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                <tr class="bg-primary">
+                    <th>Customer</th>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Shares</th>
+                    <th>Initial Stock Price($)</th>
+                    <th>Initial Stock Value($)</th>
+                    <th>Current Stock Price($)</th>
+                    <th>Current Stock Value($)</th>
+                    <th>Results($)</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for stock in stocks %}
+                    <tr>
+                        <td>{{ stock.customer }}</td>
+                        <td>{{ stock.symbol }}</td>
+                        <td>{{ stock.name }}</td>
+                        <td>{{ stock.shares|intcomma }}</td>
+                        <td>{{ stock.purchase_price|intcomma }}</td>
+                        <td>{{ stock.initial_stock_value|intcomma}}</td>
+                        <td>{{ stock.current_stock_price|intcomma }}</td>
+                        <td>{{ stock.current_stock_value|intcomma }}</td>
+                        <td>{{ stock.results_by_stock|intcomma }} </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Total of initial stocks($)</th>
+                        <th>Total of current stocks$)</th>
+                        <th>Results($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ sum_of_initial_stock_value|intcomma }}</td>
+                        <td>{{ sum_current_stocks_value|intcomma }}</td>
+                        <td>{{ sum_current_stocks_value | sub:sum_of_initial_stock_value|intcomma }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <h2 style="padding-left: 15Px">Investment Information</h2>
+        </div>
+        <div>
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Customer</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Acquired value($)</th>
+                        <th>Acquired date</th>
+                        <th>Recent value($)</th>
+                        <th>Recent date</th>
+                        <th>Results($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for investment in investments %}
+                        <tr>
+                            <td>{{ investment.customer }}</td>
+                            <td>{{ investment.category }}</td>
+                            <td>{{ investment.description }}</td>
+                            <td>{{ investment.acquired_value|intcomma}}</td>
+                            <td>{{ investment.acquired_date }}</td>
+                            <td>{{ investment.recent_value|intcomma}}</td>
+                            <td>{{ investment.recent_date }}</td>
+                            <td>{{ investment.results_by_investment|intcomma }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <table class="table table-striped table-bordered table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Total of initial investments($)</th>
+                        <th>Total of current investments($)</th>
+                        <th>Results($)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ sum_acquired_value.acquired_value__sum|intcomma }}</td>
+                        <td>{{ sum_recent_value.recent_value__sum|intcomma }}</td>
+                        <td>{{ sum_recent_value.recent_value__sum | sub:sum_acquired_value.acquired_value__sum| intcomma }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

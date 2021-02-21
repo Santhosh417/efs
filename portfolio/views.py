@@ -7,6 +7,12 @@ from django.db.models import Sum
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import CustomerSerializer
+from weasyprint import HTML, CSS
+from django.conf import settings
+from django.template.loader import render_to_string
+from io import BytesIO
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
 
 now = timezone.now()
 
@@ -181,7 +187,7 @@ def portfolio(request, pk):
     overall_recent_amount = float(sum_current_stocks_value) + float(sum_recent_value['recent_value__sum'])
     overall_total = overall_recent_amount - overall_initial_amount
 
-    return render(request, 'portfolio/portfolio.html', {'customers': customers,
+    return render(request, 'portfolio/portfolio.html', {'customer': customer,
                                                         'investments': investments,
                                                         'stocks': stocks,
                                                         'sum_acquired_value': sum_acquired_value,
@@ -203,3 +209,82 @@ class CustomerList(APIView):
         customers_json = Customer.objects.all()
         serializer = CustomerSerializer(customers_json, many=True)
         return Response(serializer.data)
+
+@login_required
+def portfolio_pdf(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    print(customer.id)
+    investments = Investment.objects.filter(customer=pk)
+    stocks = Stock.objects.filter(customer=pk)
+    sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+    sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+    # overall_investment_results = sum_recent_value-sum_acquired_value
+    # Initialize the value of the stocks
+    sum_current_stocks_value = 0
+    sum_of_initial_stock_value = 0
+
+    # Loop through each stock and add the value to the total
+    for stock in stocks:
+        sum_current_stocks_value += stock.current_stock_value()
+        sum_of_initial_stock_value += stock.initial_stock_value()
+    html_string = render_to_string('portfolio/portfolio_pdf.html', {'customer': customer,
+                                                       'investments': investments,
+                                                       'stocks': stocks,
+                                                       'sum_acquired_value': sum_acquired_value,
+                                                       'sum_recent_value': sum_recent_value,
+                                                        'sum_current_stocks_value': sum_current_stocks_value,
+                                                        'sum_of_initial_stock_value': sum_of_initial_stock_value,})
+
+    response = HttpResponse(content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=portfolio_{}.pdf'.format(customer.name)
+    response['Content-Transfer-Encoding'] = 'binary'
+    result = HTML(string=html_string).write_pdf(response,
+                                                stylesheets=[CSS(
+                                                    settings.STATIC_ROOT + '/css/pdf.css')])
+    return response
+
+
+@login_required
+def portfolio_pdf_email(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    customers = Customer.objects.filter(created_date__lte=timezone.now())
+    investments = Investment.objects.filter(customer=pk)
+    stocks = Stock.objects.filter(customer=pk)
+    sum_recent_value = Investment.objects.filter(customer=pk).aggregate(Sum('recent_value'))
+    sum_acquired_value = Investment.objects.filter(customer=pk).aggregate(Sum('acquired_value'))
+    # Initialize the value of the stocks
+    sum_current_stocks_value = 0
+    sum_of_initial_stock_value = 0
+
+    # Loop through each stock and add the value to the total
+    for stock in stocks:
+        sum_current_stocks_value += stock.current_stock_value()
+        sum_of_initial_stock_value += stock.initial_stock_value()
+    # create invoice e-mail
+    subject = '{} Portfolio'.format(customer.name)
+    message = 'Hello {},\n' \
+              'Please find the attachment for the e-copy of the you portfolio. \n' \
+              'Contact us in case you need assistance of any sort, our team is happy to assist you. \n' \
+              'Team Eagle Financial Services'.format(customer.name)
+    email = EmailMessage(subject,
+                         message,
+                         'admin@efs.com',
+                         [customer.email])
+
+    html = render_to_string('portfolio/portfolio_pdf.html',
+                            {'customers': customer,
+                             'investments': investments,
+                             'stocks': stocks,
+                             'sum_acquired_value': sum_acquired_value,
+                             'sum_recent_value': sum_recent_value,
+                             'sum_current_stocks_value': sum_current_stocks_value,
+                             'sum_of_initial_stock_value': sum_of_initial_stock_value, })
+    out = BytesIO()
+    HTML(string=html,base_url=request.build_absolute_uri()).write_pdf(out,
+                                stylesheets=[CSS(settings.STATIC_ROOT + '/css/pdf.css')])
+    email.attach('Portfolio_{}.pdf'.format(customer.name),
+                 out.getvalue(),
+                 'application/pdf')
+    #send e-mail
+    email.send()
+    return render(request, 'portfolio/pdf_sent.html')
