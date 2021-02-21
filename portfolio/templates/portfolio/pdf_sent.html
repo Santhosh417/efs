@@ -1,0 +1,6 @@
+{% extends 'portfolio/base.html' %}
+{% block content %}
+<h1>Email sent</h1>
+    <p>Email has been successfully sent!!!</p>
+    <a href="{% url 'portfolio:customer_list'%}" type="button" class="btn btn-primary">Back to customers list</a>
+{% endblock content %}

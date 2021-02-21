@@ -263,9 +263,9 @@ def portfolio_pdf_email(request, pk):
     # create invoice e-mail
     subject = '{} Portfolio'.format(customer.name)
     message = 'Hello {},\n' \
-              'Please find the attachment for the e-copy of the you portfolio. \n' \
-              'Contact us in case you need assistance of any sort, our team is happy to assist you. \n' \
-              'Team Eagle Financial Services'.format(customer.name)
+              'Please find the attachment for your portfolio. \n' \
+              'Contact us in case you need assistance, our team is happy to assist you. \n \n' \
+              'Eagle Financial Services'.format(customer.name)
     email = EmailMessage(subject,
                          message,
                          'admin@efs.com',
@@ -285,6 +285,5 @@ def portfolio_pdf_email(request, pk):
     email.attach('Portfolio_{}.pdf'.format(customer.name),
                  out.getvalue(),
                  'application/pdf')
-    #send e-mail
     email.send()
     return render(request, 'portfolio/pdf_sent.html')
